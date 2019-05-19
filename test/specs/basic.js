@@ -5,6 +5,6 @@ describe('webdriver.io page', () => {
         browser.url('/');
         const title = browser.getTitle();
         assert.equal(title, 'XPLAN Today | AMP XPLAN');
-        browser.pause(3000);
+        browser.pause(5000);
     });
 });
