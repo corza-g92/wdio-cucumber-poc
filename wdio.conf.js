@@ -1,3 +1,20 @@
+var path = require('path');
+var VisualRegressionCompare = require('wdio-visual-regression-service/compare');
+ 
+function getScreenshotName(basePath) {
+  return function(context) {
+    var type = context.type;
+    var testName = context.step.name;
+    var browserVersion = parseInt(context.browser.version, 10);
+    var browserName = context.browser.name;
+    var browserViewport = context.meta.viewport;
+    var browserWidth = browserViewport.width;
+    var browserHeight = browserViewport.height;
+ 
+    return path.join(basePath, `${testName}_${type}_${browserName}_v${browserVersion}_${browserWidth}x${browserHeight}.png`);
+  };
+}
+
 exports.config = {
     
     // Override the default path of /wd/hub
@@ -21,7 +38,7 @@ exports.config = {
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
     specs: [
-        './test/specs/**/*.js'
+        './features/xplan.feature'
     ],
     // Patterns to exclude.
     exclude: [
@@ -68,7 +85,7 @@ exports.config = {
     // Define all options that are relevant for the WebdriverIO instance here
     //
     // Level of logging verbosity: trace | debug | info | warn | error | silent
-    logLevel: 'debug',
+    logLevel: 'verbose',
     //logDir: './logs',
     //
     // Set specific log levels per logger
@@ -109,7 +126,19 @@ exports.config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['chromedriver'],
+    services: ['chromedriver', 'visual-regression'],
+
+    visualRegression: {
+      compare: new VisualRegressionCompare.LocalCompare({
+        referenceName: getScreenshotName(path.join(process.cwd(), 'screenshots/baseline')),
+        screenshotName: getScreenshotName(path.join(process.cwd(), 'screenshots/actual')),
+        diffName: getScreenshotName(path.join(process.cwd(), 'screenshots/diff')),
+        misMatchTolerance: 0.01,
+      }),
+      viewportChangePause: 300,
+      viewports: [{ width: 1024, height: 768 }],
+      orientations: ['landscape'],
+    },
 
     //chromeDriverArgs: ['--port=9515', '--url-base=\'/\''], // default for ChromeDriver
     //chromeDriverLogs: './',
@@ -118,7 +147,7 @@ exports.config = {
     // see also: https://webdriver.io/docs/frameworks.html
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
-    framework: 'mocha',
+    framework: 'cucumber',
     //
     // The number of times to retry the entire specfile when it fails as a whole
     // specFileRetries: 1,
@@ -131,9 +160,29 @@ exports.config = {
     //
     // Options to be passed to Mocha.
     // See the full list at http://mochajs.org/
-    mochaOpts: {
-        ui: 'bdd',
-        timeout: 60000
+    // mochaOpts: {
+    //     ui: 'bdd',
+    //     timeout: 60000
+    // },
+    cucumberOpts: {
+        require: ['./step_definitions/*.js'],   // <string[]> (file/dir) require files before executing features
+        backtrace: true,    // <boolean> show full backtrace for errors
+        compiler: ['js:babel-core/register'], // <string[]> filetype:compiler used for processing required features
+        failAmbiguousDefinitions: false,       // <boolean< Treat ambiguous definitions as errors
+        dryRun: false,      // <boolean> invoke formatters without executing steps
+        failFast: false,    // <boolean> abort the run on first failure
+        ignoreUndefinedDefinitions: false,    // <boolean> Enable this config to treat undefined definitions as warnings
+        name: [],           // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
+        format: ['pretty'], // <string[]> (type[:path]) specify the output format, optionally supply PATH to redirect formatter output (repeatable)
+        colors: true,       // <boolean> disable colors in formatter output
+        snippets: false,    // <boolean> hide step definition snippets for pending steps
+        source: false,      // <boolean> hide source uris
+        profile: [],        // <string[]> (name) specify the profile to use
+        strict: true,       // <boolean> fail if there are any undefined or pending steps
+        tagExpression: 'not @Pending',      // <string> (expression) only execute the features or scenarios with tags matching the expression, see https://docs.cucumber.io/tag-expressions/
+        timeout: 30000,    // <number> timeout for step definitions
+        tagsInTitle: false,                 // <boolean> add cucumber tags to feature or scenario name
+        snippetSyntax: undefined,           // <string> specify a custom snippet syntax
     },
     //
     // =====
