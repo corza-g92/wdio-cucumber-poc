@@ -15,3 +15,12 @@ Then(/^the title is "(.+)"/, function (expected_title) {
   assert.equal(title, expected_title);
   browser.pause(5000);
 });
+
+When(/^I login to xplan charter/, function () {
+    title = browser.getTitle();
+  });
+        
+Then(/^the title is "(.+)"/, function (expected_title) {
+  assert.equal(title, expected_title);
+  browser.pause(5000);
+});
