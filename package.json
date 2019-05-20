@@ -10,6 +10,7 @@
   "dependencies": {
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
+    "chai": "^4.2.0",
     "chromedriver": "^74.0.0",
     "wdio-chromedriver-service": "^0.1.5",
     "wdio-cucumber-framework": "^2.2.8",
@@ -26,7 +27,14 @@
   "description": "",
   "babel": {
     "presets": [
-        ["env", { "targets": {"node": "current"}}]
+      [
+        "env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
       ]
+    ]
   }
 }
