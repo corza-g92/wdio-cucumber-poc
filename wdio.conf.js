@@ -4,7 +4,7 @@ var VisualRegressionCompare = require('wdio-visual-regression-service/compare');
 function getScreenshotName(basePath) {
   return function(context) {
     var type = context.type;
-    var testName = context.step.name;
+    var testName = context.step.text;
     var browserVersion = parseInt(context.browser.version, 10);
     var browserName = context.browser.name;
     var browserViewport = context.meta.viewport;
@@ -113,7 +113,7 @@ exports.config = {
     baseUrl: 'https://amptest.xplan.iress.com.au',
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: 1000,
+    waitforTimeout: 5000,
     //
     // Default timeout in milliseconds for request
     // if Selenium Grid doesn't send response
@@ -165,7 +165,7 @@ exports.config = {
     //     timeout: 60000
     // },
     cucumberOpts: {
-        require: ['./step_definitions/*.js'],   // <string[]> (file/dir) require files before executing features
+        require: ['./stepDefinitions/*.js'],   // <string[]> (file/dir) require files before executing features
         backtrace: true,    // <boolean> show full backtrace for errors
         compiler: ['js:babel-core/register'], // <string[]> filetype:compiler used for processing required features
         failAmbiguousDefinitions: false,       // <boolean< Treat ambiguous definitions as errors
@@ -180,7 +180,7 @@ exports.config = {
         profile: [],        // <string[]> (name) specify the profile to use
         strict: true,       // <boolean> fail if there are any undefined or pending steps
         tagExpression: 'not @Pending',      // <string> (expression) only execute the features or scenarios with tags matching the expression, see https://docs.cucumber.io/tag-expressions/
-        timeout: 30000,    // <number> timeout for step definitions
+        timeout: 300000,    // <number> timeout for step definitions
         tagsInTitle: false,                 // <boolean> add cucumber tags to feature or scenario name
         snippetSyntax: undefined,           // <string> specify a custom snippet syntax
     },

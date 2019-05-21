@@ -1,5 +1,5 @@
 Feature: Test xplan login page
   Scenario: Login to xplan
-    Given I am on the charter login page
-    When I login to xplan charter
-    Then the title is not "XPLAN Today | AMP XPLAN"
+    Given I am logged in to existing client with entity id "4738323"
+    When I open primary details
+    Then I can verify personal details

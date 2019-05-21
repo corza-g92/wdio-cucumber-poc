@@ -1,11 +1,13 @@
-import Page from './base_page';
-
 const baseUrl = 'https://amptest.xplan.iress.com.au'
 
-class LoginPage extends Page{
+class LoginPage {
   get usernameInput()   { return browser.element('#userid'); }
   get passwordInput()   { return browser.element('#passwd'); }
   get loginButton()   { return browser.element('#btn_login'); }
+
+  open(path) {
+    browser.url(path);
+  }
 
   login(username, password) {
     this.usernameInput.inputText(username);
